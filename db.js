@@ -21,7 +21,7 @@ async function getAlbums() {
 }
 
 async function getAlbumById(id) {
-    const [rows] = await pool.query('SELECT * FROM albums WHERE id = ?', [id]);
+    const [rows] = await pool.query('SELECT * FROM album WHERE albumId = ?', [id]);
     return rows[0];
 }
 
@@ -66,7 +66,7 @@ async function getReviews() {
 }
 
 async function getAlbumsByGenre(genre) {
-    const [rows] = await pool.query('SELECT * FROM album WHERE albumId = ANY(SELECT albumId FROM album2genre WHERE genreId = ANY(SELECT genreId FROM genre WHERE title = ?))', [genre]);
+    const [rows] = await pool.query('SELECT * FROM album WHERE albumId = ANY(SELECT albumId FROM album2genre WHERE genreId = ?)', [genre]);
     return rows;
 }
 
@@ -76,7 +76,7 @@ async function getGenres() {
 }
 
 async function getAlbumsByArtist(artist) {
-    const [rows] = await pool.query('SELECT * FROM album WHERE artistId = ANY(SELECT artistId FROM artist WHERE title = ?)', [artist]);
+    const [rows] = await pool.query('SELECT * FROM album WHERE artistId = ?', [artist]);
     return rows;
 }
 
@@ -85,12 +85,17 @@ async function getArtists() {
     return rows;
 }
 
+async function getArtistById(id) {
+    const [rows] = await pool.query('SELECT * FROM artist WHERE artistId = ?', [id]);
+    return rows[0];
+}
+
 async function getAlbumsByYear(year) {
     const [rows] = await pool.query('SELECT * FROM album WHERE year = ?', [year]);
     return rows;
 }
 
-async function updateAlbumRating(albumId, rating) {
+async function updateAlbumRating(albumId) {
     const [ratings] = await pool.query('SELECT rating FROM review WHERE albumId = ?', [albumId]);
     let totalRating = 0;
     ratings.forEach(rating => totalRating += rating.rating);
@@ -114,6 +119,7 @@ module.exports = {
     getGenres,
     getAlbumsByArtist,
     getArtists,
+    getArtistById,
     getAlbumsByYear,
     updateAlbumRating
 };
