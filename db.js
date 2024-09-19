@@ -16,7 +16,7 @@ const pool = mysql.createPool({
 console.log('Connecting to database...');
 
 async function getAlbums() {
-    const [rows] = await pool.query('SELECT a2g.albumId, a.title, a.artistId, a.image, GROUP_CONCAT(g.title) FROM ((album2genre a2g INNER JOIN album a ON a2g.albumId = a.albumId) INNER JOIN genre g ON a2g.genreId = g.genreId) GROUP BY albumId');
+    const [rows] = await pool.query('SELECT a2g.albumId, a.title, ar.title AS artist, a.image, GROUP_CONCAT(g.title) AS genre FROM ((album2genre a2g INNER JOIN album a ON a2g.albumId = a.albumId) LEFT JOIN genre g ON a2g.genreId = g.genreId LEFT JOIN artist ar ON a.artistId = ar.artistId) GROUP BY albumId');
     return rows;
 }
 
