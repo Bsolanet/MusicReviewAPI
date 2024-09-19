@@ -10,7 +10,7 @@ router.post('/', async (req, res) => {
         res.status(401).json({ error: 'Invalid username or password' });
         return;
     }
-    res.json({ userId: user.id });
+    res.json({ userId: user.userId, username: user.username, password: user.pass });
 });
 
 router.get('/:userId/reviews', async (req, res) => {
